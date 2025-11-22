@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.example</groupId>
-  <artifactId>library-management</artifactId>
+  <artifactId>product-management-demo</artifactId>
   <version>1.0-SNAPSHOT</version>
 
   <properties>
@@ -33,14 +33,15 @@
           <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
       </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>exec-maven-plugin</artifactId>
-          <version>3.1.0</version>
-          <configuration>
-            <mainClass>main.Main</mainClass>
-          </configuration>
-        </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <mainClass>com.example.demo.Main</mainClass>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>

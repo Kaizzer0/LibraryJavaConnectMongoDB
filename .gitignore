@@ -1,0 +1,78 @@
+# Maven build output
+/target/
+build/
+out/
+
+# Maven wrapper (keep wrapper script, ignore jar if you prefer)
+/.mvn/wrapper/maven-wrapper.jar
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+
+# VS Code
+.vscode/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# System files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Logs and temp
+*.log
+logs/
+tmp/
+temp/
+
+# OS generated files
+desktop.ini
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Generated files by build tools
+dependency-reduced-pom.xml
+release.properties
+
+# Credentials / local config
+.env
+*.keystore
+*.jks
+secrets.properties
+config.local.properties
+
+# IDE / Editor metadata
+*.swp
+*~.nib
+*.sublime-workspace
+*.sublime-project
+
+# Database / local data
+/data/
+*.db
+mongodb-data/
+mongo-data/
+
+# Optional: ignore generated sources or IDE caches
+/generated-sources/
+/*.iml
+
+# Ignore OS-specific icon files
+Icon?

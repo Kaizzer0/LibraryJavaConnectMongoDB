@@ -4,45 +4,48 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import org.bson.Document;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.set;
 
-import org.bson.Document;
 import java.util.Scanner;
 
 public class Main {
-    private static final Scanner scanner = new Scanner(System.in);
+    // keep scanner non-final so we can close it
+    private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         MongoDBConnection conn = new MongoDBConnection();
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("\n[System] Shutting down: closing MongoDB connection and scanner...");
-            try { conn.close(); } catch (Exception ignored) {}
-            try { scanner.close(); } catch (Exception ignored) {}
-        }));
-
         MongoDatabase db = conn.getDatabase();
         MongoCollection<Document> products = db.getCollection("products");
 
         System.out.println("=== Product Management System ===");
-        boolean running = true;
-        while (running) {
-            printMenu();
-            String choice = scanner.nextLine().trim();
-            try {
-                switch (choice) {
-                    case "1": insertProduct(products); break;
-                    case "2": listProducts(products); break;
-                    case "3": queryByCode(products); break;
-                    case "4": updatePrice(products); break;
-                    case "5": deleteProduct(products); break;
-                    case "6": running = false; break;
-                    default: System.out.println("Invalid selection."); break;
+
+        try {
+            boolean running = true;
+            while (running) {
+                printMenu();
+                String choice = scanner.nextLine().trim();
+                try {
+                    switch (choice) {
+                        case "1": insertProduct(products); break;
+                        case "2": listProducts(products); break;
+                        case "3": queryByCode(products); break;
+                        case "4": updatePrice(products); break;
+                        case "5": deleteProduct(products); break;
+                        case "6": running = false; break;
+                        default: System.out.println("Invalid selection."); break;
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error: " + e.getMessage());
                 }
-            } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
             }
+        } finally {
+            // Explicitly close resources while classes are available
+            System.out.println("[System] Closing MongoDB connection and scanner...");
+            try { conn.close(); } catch (Throwable t) { System.err.println("Close error: " + t.getMessage()); }
+            try { if (scanner != null) scanner.close(); } catch (Throwable ignored) {}
         }
 
         System.out.println("Exiting.");
@@ -73,12 +76,9 @@ public class Main {
 
         System.out.print("Enter name: ");
         String name = scanner.nextLine().trim();
-        double price;
         Double p = readDouble("Enter price: ");
         if (p == null) return;
-        price = p;
-
-        Product product = new Product(code, name, price);
+        Product product = new Product(code, name, p);
         col.insertOne(product.toDocument());
         System.out.println("Inserted: " + product);
     }

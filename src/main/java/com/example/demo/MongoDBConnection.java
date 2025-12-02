@@ -5,13 +5,15 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
 public class MongoDBConnection {
-    private final MongoClient client;
-    private final MongoDatabase database;
+    private MongoClient client;
+    private MongoDatabase database;
 
+    // Constructor mặc định (cho code cũ nếu cần)
     public MongoDBConnection() {
-        this(MyConstants.URI, MyConstants.DB_NAME);
+        this("mongodb://localhost:27017", "ProductDB");
     }
 
+    // Constructor mới (Cho giao diện JavaFX)
     public MongoDBConnection(String uri, String dbName) {
         this.client = MongoClients.create(uri);
         this.database = client.getDatabase(dbName);
@@ -22,6 +24,6 @@ public class MongoDBConnection {
     }
 
     public void close() {
-        try { client.close(); } catch (Exception ignored) {}
+        if (client != null) client.close();
     }
 }

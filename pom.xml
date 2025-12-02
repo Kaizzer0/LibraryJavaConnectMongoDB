@@ -12,6 +12,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
+    <javafx.version>17.0.2</javafx.version>
+    <!-- Set javafx.platform to 'win', 'linux', or 'mac' before running -->
+    <javafx.platform>win</javafx.platform>
   </properties>
 
   <dependencies>
@@ -19,6 +22,20 @@
       <groupId>org.mongodb</groupId>
       <artifactId>mongodb-driver-sync</artifactId>
       <version>4.11.0</version>
+    </dependency>
+
+    <!-- JavaFX modules (platform classifier required at runtime) -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>${javafx.version}</version>
+      <classifier>${javafx.platform}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <version>${javafx.version}</version>
+      <classifier>${javafx.platform}</classifier>
     </dependency>
   </dependencies>
 
@@ -39,8 +56,10 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.1.0</version>
         <configuration>
-          <mainClass>com.example.demo.Main</mainClass>
-          <fork>true</fork> <!-- run in a separate JVM to avoid classloader/threadgroup issues -->
+          <mainClass>com.example.demo.App</mainClass>
+          <includeProjectDependencies>true</includeProjectDependencies>
+          <includePluginDependencies>false</includePluginDependencies>
+          <vmArgs>--add-modules javafx.controls,javafx.fxml</vmArgs>
         </configuration>
       </plugin>
     </plugins>

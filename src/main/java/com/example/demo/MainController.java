@@ -245,7 +245,8 @@ public class MainController {
         res.ifPresent(title -> {
             MongoDBConnection svcConn = null;
             try {
-                svcConn = new MongoDBConnection();
+                // FIX: Use UI connection fields instead of default LibraryDB
+                svcConn = new MongoDBConnection(uriField.getText(), dbField.getText());
                 LibraryManagementSystem lms = new LibraryManagementSystem(svcConn.getDatabase());
                 boolean ok = lms.borrowBook(title.trim(), currentUser.getUsername());
                 showAlert(ok ? Alert.AlertType.INFORMATION : Alert.AlertType.WARNING, ok ? "Borrowed" : "Failed",
@@ -267,7 +268,8 @@ public class MainController {
         res.ifPresent(title -> {
             MongoDBConnection svcConn = null;
             try {
-                svcConn = new MongoDBConnection();
+                // FIX: Use UI connection fields instead of default LibraryDB
+                svcConn = new MongoDBConnection(uriField.getText(), dbField.getText());
                 LibraryManagementSystem lms = new LibraryManagementSystem(svcConn.getDatabase());
                 boolean ok = lms.returnBook(title.trim(), currentUser.getUsername());
                 showAlert(ok ? Alert.AlertType.INFORMATION : Alert.AlertType.WARNING, ok ? "Returned" : "Failed",
@@ -335,7 +337,7 @@ public class MainController {
             cd.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
             GridPane cg = new GridPane(); cg.setHgap(10); cg.setVgap(10);
             TextField username = new TextField(); PasswordField password = new PasswordField();
-            ChoiceBox<String> roleBox = new ChoiceBox<>(FXCollections.observableArrayList("librarian", "reader", "student")); // admin removed
+            ChoiceBox<String> roleBox = new ChoiceBox<>(FXCollections.observableArrayList("librarian", "reader", "student"));
             TextField studentNumber = new TextField();
             studentNumber.setPromptText("studentNumber (if student)");
 

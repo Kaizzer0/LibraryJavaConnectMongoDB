@@ -27,7 +27,7 @@ public class LibraryManagementSystem {
 
     public LibraryManagementSystem(MongoDatabase db) {
         this.users = db.getCollection("users");
-        this.books = db.getCollection("books");
+        this.books = db.getCollection("products");  // Changed from "books" to "products"
         this.transactions = db.getCollection("transactions");
     }
 
@@ -91,7 +91,6 @@ public class LibraryManagementSystem {
         return out;
     }
 
-    // Book operations: add/update ensure timestamps and mandatory fields
     public void addBook(Book b) {
         if (b == null) throw new IllegalArgumentException("book==null");
         Document d = b.toDocument();
@@ -122,12 +121,10 @@ public class LibraryManagementSystem {
         return true;
     }
 
-    // Borrow by Title: find first Available book with matching title and mark Borrowed
     public boolean borrowBook(String title, String username) {
         if (title == null || title.trim().isEmpty()) return false;
         Document doc = books.find(and(regex("name", "^" + java.util.regex.Pattern.quote(title) + "$", "i"), eq("status", "Available"))).first();
         if (doc == null) {
-            // fallback: partial match (first available)
             doc = books.find(and(regex("name", title, "i"), eq("status", "Available"))).first();
         }
         if (doc == null) return false;
@@ -143,7 +140,6 @@ public class LibraryManagementSystem {
         return true;
     }
 
-    // Return by Title: find first Borrowed book with matching title and borrowedBy == username
     public boolean returnBook(String title, String username) {
         if (title == null || title.trim().isEmpty()) return false;
         Document doc = books.find(and(regex("name", "^" + java.util.regex.Pattern.quote(title) + "$", "i"), eq("status", "Borrowed"), eq("borrowedBy", username))).first();

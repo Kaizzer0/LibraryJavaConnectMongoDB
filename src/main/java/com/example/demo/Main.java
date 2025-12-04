@@ -11,11 +11,19 @@ import static com.mongodb.client.model.Updates.set;
 
 import java.util.Scanner;
 
+import model.Admin;
+import model.Librarian;
+import model.Reader;
+import service.LibraryManagementSystem;
+
 public class Main {
     // keep scanner non-final so we can close it
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        // Ensure default users exist in LibraryDB (admin, lib, read)
+        seedData();
+
         MongoDBConnection conn = new MongoDBConnection();
         MongoDatabase db = conn.getDatabase();
         MongoCollection<Document> products = db.getCollection("products");
@@ -49,6 +57,50 @@ public class Main {
         }
 
         System.out.println("Exiting.");
+    }
+
+    /**
+     * Seed default users into LibraryDB if they do not already exist:
+     *  - admin / 123 / admin
+     *  - lib   / 123 / librarian
+     *  - read  / 123 / reader
+     *
+     * Uses service.MongoDBConnection (LibraryDB) and LibraryManagementSystem to add users.
+     */
+    private static void seedData() {
+        service.MongoDBConnection svcConn = null;
+        try {
+            svcConn = new service.MongoDBConnection(); // connects to LibraryDB by default
+            LibraryManagementSystem lms = new LibraryManagementSystem(svcConn.getDatabase());
+
+            // admin
+            if (lms.findUserByUsername("admin") == null) {
+                try {
+                    lms.addUser(new Admin("u-admin", "admin", "123"));
+                    System.out.println("[seed] created user: admin / role=admin");
+                } catch (Exception ex) { System.out.println("[seed] admin create failed: " + ex.getMessage()); }
+            }
+
+            // librarian
+            if (lms.findUserByUsername("lib") == null) {
+                try {
+                    lms.addUser(new Librarian("u-lib", "lib", "123"));
+                    System.out.println("[seed] created user: lib / role=librarian");
+                } catch (Exception ex) { System.out.println("[seed] lib create failed: " + ex.getMessage()); }
+            }
+
+            // reader
+            if (lms.findUserByUsername("read") == null) {
+                try {
+                    lms.addUser(new Reader("u-read", "read", "123"));
+                    System.out.println("[seed] created user: read / role=reader");
+                } catch (Exception ex) { System.out.println("[seed] read create failed: " + ex.getMessage()); }
+            }
+        } catch (Exception e) {
+            System.err.println("[seed] error: " + e.getMessage());
+        } finally {
+            try { if (svcConn != null) svcConn.close(); } catch (Exception ignored) {}
+        }
     }
 
     private static void printMenu() {

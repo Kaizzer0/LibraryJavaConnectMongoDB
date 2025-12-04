@@ -6,26 +6,26 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.MainController">
   <top>
-    <!-- Top area: connection and search -->
     <VBox spacing="8">
-      <padding>
-        <Insets top="12" right="12" bottom="12" left="12"/>
-      </padding>
-
-      <HBox spacing="8" alignment="CENTER_LEFT">
-        <Label text="MongoDB URI:" />
-        <TextField fx:id="uriField" prefWidth="420" promptText="mongodb://localhost:27017" />
-        <Label text="DB:" />
-        <TextField fx:id="dbField" prefWidth="140" promptText="ProductDB" />
-        <Label text="Collection:" />
-        <TextField fx:id="collectionField" prefWidth="140" promptText="products" />
-        <Button fx:id="connectButton" text="Connect" onAction="#onConnect" />
+      <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+      
+      <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-background-color: #f0f0f0; -fx-padding: 5;">
+         <Label fx:id="userLabel" text="Not logged in" style="-fx-font-weight: bold;"/>
+         <Button fx:id="loginButton" text="Login" onAction="#onLogin"/>
+         <Button fx:id="userMgmtButton" text="User Mgmt (Admin)" visible="false" managed="false"/>
       </HBox>
 
       <HBox spacing="8" alignment="CENTER_LEFT">
-        <padding>
-          <Insets top="6" right="0" bottom="0" left="0"/>
-        </padding>
+        <Label text="MongoDB URI:" />
+        <TextField fx:id="uriField" prefWidth="350" text="mongodb://localhost:27017" />
+        <Label text="DB:" />
+        <TextField fx:id="dbField" prefWidth="120" text="ProductDB" />
+        <Label text="Coll:" />
+        <TextField fx:id="collectionField" prefWidth="120" text="products" />
+        <Button text="Connect" onAction="#onConnect" />
+      </HBox>
+
+      <HBox spacing="8" alignment="CENTER_LEFT">
         <TextField fx:id="searchField" promptText="Search by code or name" HBox.hgrow="ALWAYS"/>
         <Button text="Search" onAction="#onSearch" />
         <Button text="Refresh" onAction="#onRefresh" />
@@ -35,24 +35,22 @@
 
   <center>
     <VBox spacing="8">
-      <padding>
-        <Insets top="12" right="12" bottom="12" left="12"/>
-      </padding>
-
-      <TableView fx:id="table" prefHeight="520" VBox.vgrow="ALWAYS">
+      <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+      
+      <TableView fx:id="table" VBox.vgrow="ALWAYS">
         <columns>
-          <TableColumn fx:id="colCode" text="Code" prefWidth="140" />
-          <TableColumn fx:id="colName" text="Name" prefWidth="360" />
-          <TableColumn fx:id="colCategory" text="Category" prefWidth="180" />
-          <TableColumn fx:id="colPrice" text="Price" prefWidth="120" style="-fx-alignment: CENTER-RIGHT;"/>
+          <TableColumn fx:id="colCode" text="Code" prefWidth="120" />
+          <TableColumn fx:id="colName" text="Name" prefWidth="300" />
+          <TableColumn fx:id="colCategory" text="Category" prefWidth="150" />
+          <TableColumn fx:id="colPrice" text="Price" prefWidth="100" style="-fx-alignment: CENTER-RIGHT;"/>
           <TableColumn fx:id="colInStock" text="In Stock" prefWidth="80" style="-fx-alignment: CENTER;"/>
         </columns>
       </TableView>
 
-      <HBox spacing="8" alignment="CENTER_RIGHT">
-        <Button text="Add" onAction="#onAdd" />
-        <Button text="Update" onAction="#onUpdate" />
-        <Button text="Delete" onAction="#onDelete" />
+      <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button fx:id="addButton" text="Add Product" onAction="#onAdd" visible="false" managed="false"/>
+        <Button fx:id="updateButton" text="Update Selected" onAction="#onUpdate" visible="false" managed="false"/>
+        <Button fx:id="deleteButton" text="Delete Selected" onAction="#onDelete" visible="false" managed="false" style="-fx-text-fill: red;"/>
       </HBox>
     </VBox>
   </center>
